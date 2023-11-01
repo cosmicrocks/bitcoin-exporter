@@ -12,7 +12,6 @@ use hyper::{
 use std::sync::Arc;
 
 use crate::{
-	args::Args,
 	config::Config,
 	serve::serve_req,
 };
@@ -27,10 +26,8 @@ async fn main() -> anyhow::Result<()> {
 	);
 	log::info!("{} v{}", env!("CARGO_BIN_NAME"), env!("CARGO_PKG_VERSION"));
 
-	// parse args
-	let args: Args = args::from_env();
-	// parse yaml config
-	let config = Config::read(&args.config)?;
+	// get config
+	let config = Config::read()?;
 	let addr = &config.bind.parse()?;
 
 	// create rpc client

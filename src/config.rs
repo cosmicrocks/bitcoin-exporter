@@ -1,7 +1,6 @@
-use anyhow::{Context, Result};
+use anyhow::{Result};
 use serde::Deserialize;
-use std::env;
-use std::fs::File;
+use std::{env, default};
 
 fn default_host() -> String {
 	"http://127.0.0.1:8332".to_owned()
@@ -28,13 +27,22 @@ pub struct Config {
 	pub bind: String,
 }
 
+// default impl for Config
+impl default::Default for Config {
+	fn default() -> Self {
+		Config {
+			host: default_host(),
+			user: "".to_owned(),
+			password: "".to_owned(),
+			bind: default_bind(),
+		}
+	}
+}
+
 impl Config {
-	pub fn read(config: &str) -> Result<Config> {
-		// Open configuration file
-		let file = File::open(&config).with_context(|| format!("Can't open {}", &config))?;
-		// Deserialize configuration
-		let mut config: Config =
-			serde_yaml::from_reader(file).with_context(|| format!("Can't read {}", &config))?;
+	pub fn read() -> Result<Config> {
+
+		let mut config: Config = Config::default();
 
 		// Check if config values are set in environment variables
 		if let Ok(host) = env::var("BITCOIN_RPC_HOST") {
