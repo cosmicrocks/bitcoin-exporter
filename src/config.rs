@@ -7,7 +7,7 @@ fn default_host() -> String {
 }
 
 fn default_bind() -> String {
-	"127.0.0.1:3000".to_owned()
+	"0.0.0.0:3000".to_owned()
 }
 
 /// Config file
